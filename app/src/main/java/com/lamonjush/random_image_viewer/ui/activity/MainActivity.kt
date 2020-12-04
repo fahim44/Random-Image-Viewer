@@ -1,9 +1,17 @@
 package com.lamonjush.random_image_viewer.ui.activity
 
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.target.CustomTarget
+import com.bumptech.glide.request.transition.Transition
+import com.bumptech.glide.signature.ObjectKey
+import com.lamonjush.random_image_viewer.BuildConfig
 import com.lamonjush.random_image_viewer.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -24,7 +32,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun handleLiveData() {
-        //todo
         viewModel.netWorkAvailableLiveData.observe(this, {
             if (it) {
                 binding.noNetworkAlertCardView.visibility = View.INVISIBLE
@@ -32,11 +39,31 @@ class MainActivity : AppCompatActivity() {
                 binding.noNetworkAlertCardView.visibility = View.VISIBLE
             }
         })
+
+        viewModel.bitmapLiveData.observe(this, {
+            binding.imageView.setImageBitmap(it)
+        })
     }
 
     private fun handleClickListener() {
         binding.fetchImageButton.setOnClickListener {
-            //todo
+            if (viewModel.canFetchImage()) {
+                fetchImage()
+            }
         }
+    }
+
+    private fun fetchImage() {
+        Glide.with(this)
+            .asBitmap()
+            .load(BuildConfig.imageFetch_url)
+            .apply(RequestOptions().signature(ObjectKey("signature string")))
+            .into(object : CustomTarget<Bitmap>() {
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) =
+                    viewModel.imageFetched(resource)
+
+                override fun onLoadCleared(placeholder: Drawable?) {
+                }
+            })
     }
 }

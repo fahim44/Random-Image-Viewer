@@ -1,6 +1,7 @@
 package com.lamonjush.random_image_viewer.ui.activity
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkRequest
@@ -13,12 +14,15 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import timber.log.Timber
 
 class MainViewModel @ViewModelInject constructor(
-    @ApplicationContext private val context: Context,
+    @ApplicationContext private val applicationContext: Context,
     facility: ImageFacility
 ) : ViewModel() {
 
-    private val _netWorkAvailableMutableLiveData : MutableLiveData<Boolean> = MutableLiveData()
-    val netWorkAvailableLiveData : LiveData<Boolean> get() = _netWorkAvailableMutableLiveData
+    private val _netWorkAvailableMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    val netWorkAvailableLiveData: LiveData<Boolean> get() = _netWorkAvailableMutableLiveData
+
+    private val _bitmapMutableLiveData: MutableLiveData<Bitmap> = MutableLiveData()
+    val bitmapLiveData: LiveData<Bitmap> get() = _bitmapMutableLiveData
 
     init {
         startNetworkCallback()
@@ -53,5 +57,13 @@ class MainViewModel @ViewModelInject constructor(
         getConnectivityManager()?.unregisterNetworkCallback(ConnectivityManager.NetworkCallback())
     }
 
-    private fun getConnectivityManager() = context.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+    private fun getConnectivityManager() =
+        applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
+
+
+    fun canFetchImage() = _netWorkAvailableMutableLiveData.value ?: false
+
+    fun imageFetched(bitmap: Bitmap) {
+        _bitmapMutableLiveData.value = bitmap
+    }
 }
