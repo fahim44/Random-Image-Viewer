@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">এলোমেলো ছবি</string>
+    <string name="fetch_button_text">নতুন ছবি</string>
+    <string name="no_network_alert">কোন  নেটওয়ার্ক এর সাথে যুক্ত নাই !!!</string>
+</resources>
