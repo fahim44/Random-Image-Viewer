@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="guideline_margin">24dp</dimen>
+    <dimen name="cardView_cornerRadius">4dp</dimen>
+    <dimen name="cardView_elevation">4dp</dimen>
+</resources>

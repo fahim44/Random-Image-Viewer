@@ -58,11 +58,11 @@
         android:id="@+id/imageViewHolderCardView"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="@dimen/guideline_margin"
         app:cardCornerRadius="@dimen/cardView_cornerRadius"
         app:cardElevation="@dimen/cardView_elevation"
         app:layout_constraintBottom_toBottomOf="@id/bottomGuideline"
-        app:layout_constraintDimensionRatio="H,1:1"
-        app:layout_constraintEnd_toEndOf="@id/rightGuideline"
+        app:layout_constraintDimensionRatio="W,1:1"
         app:layout_constraintStart_toStartOf="@id/leftGuideline"
         app:layout_constraintTop_toBottomOf="@id/noNetworkAlertCardView">
 
@@ -81,7 +81,7 @@
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="@id/bottomGuideline"
         app:layout_constraintEnd_toEndOf="@id/rightGuideline"
-        app:layout_constraintStart_toStartOf="@id/leftGuideline"
-        app:layout_constraintTop_toBottomOf="@id/imageViewHolderCardView" />
+        app:layout_constraintStart_toEndOf="@id/imageViewHolderCardView"
+        app:layout_constraintTop_toBottomOf="@id/noNetworkAlertCardView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

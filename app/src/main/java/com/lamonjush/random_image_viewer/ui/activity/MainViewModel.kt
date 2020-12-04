@@ -10,6 +10,4 @@ class MainViewModel @ViewModelInject constructor(
     @ApplicationContext private val context: Context,
     facility: ImageFacility
 ) : ViewModel() {
-
-
 }
