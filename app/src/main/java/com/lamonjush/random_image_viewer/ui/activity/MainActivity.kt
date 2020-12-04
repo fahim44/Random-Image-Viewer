@@ -1,9 +1,9 @@
 package com.lamonjush.random_image_viewer.ui.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import com.lamonjush.random_image_viewer.R
 import com.lamonjush.random_image_viewer.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,6 +25,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleLiveData() {
         //todo
+        viewModel.netWorkAvailableLiveData.observe(this, {
+            if (it) {
+                binding.noNetworkAlertCardView.visibility = View.INVISIBLE
+            } else {
+                binding.noNetworkAlertCardView.visibility = View.VISIBLE
+            }
+        })
     }
 
     private fun handleClickListener() {
