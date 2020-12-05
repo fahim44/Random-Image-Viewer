@@ -10,6 +10,7 @@ import com.lamonjush.random_image_viewer.BuildConfig
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import timber.log.Timber
 import javax.inject.Inject
 
 class PreferenceDataSourceImpl @Inject constructor(
@@ -22,6 +23,7 @@ class PreferenceDataSourceImpl @Inject constructor(
     override fun get(key: String): Flow<String> {
         val prefKey = preferencesKey<String>(key)
         return dataStore.data.map {
+            Timber.d("retrieving data for key: %s", key)
             it[prefKey] ?: ""
         }
     }
@@ -29,6 +31,7 @@ class PreferenceDataSourceImpl @Inject constructor(
     override suspend fun put(key: String, value: String) {
         val prefKey = preferencesKey<String>(key)
         dataStore.edit {
+            Timber.d("saving data into preference: key: %s ,value: %s", key, value)
             it[prefKey] = value
         }
     }

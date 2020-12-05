@@ -10,6 +10,7 @@ import javax.inject.Inject
 class BitmapMapperImpl @Inject constructor() : BitmapMapper {
 
     override fun encodeToBase64(image: Bitmap): String {
+        Timber.d("Start encoding")
         val outputStream = ByteArrayOutputStream()
         image.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
         val b: ByteArray = outputStream.toByteArray()
@@ -19,6 +20,7 @@ class BitmapMapperImpl @Inject constructor() : BitmapMapper {
     }
 
     override fun decodeBase64(input: String?): Bitmap {
+        Timber.d("start decoding")
         val decodedByte = Base64.decode(input, 0)
         return BitmapFactory
             .decodeByteArray(decodedByte, 0, decodedByte.size)
