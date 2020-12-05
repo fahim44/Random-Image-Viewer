@@ -7,5 +7,5 @@ interface ImageFacility {
 
     fun getImage() : Flow<Bitmap>
 
-    fun putImage(bitmap: Bitmap)
+    suspend fun putImage(bitmap: Bitmap)
 }

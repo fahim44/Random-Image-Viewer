@@ -4,40 +4,44 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.net.ConnectivityManager
 import android.net.Network
-import android.net.NetworkRequest
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.lamonjush.random_image_viewer.facility.ImageFacility
+import com.lamonjush.random_image_viewer.utility.NetworkConnectivityManager
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class MainViewModel @ViewModelInject constructor(
     @ApplicationContext private val applicationContext: Context,
-    facility: ImageFacility
+    private val facility: ImageFacility,
+    private val networkConnectivityManager: NetworkConnectivityManager
 ) : ViewModel() {
 
-    private val _netWorkAvailableMutableLiveData: MutableLiveData<Boolean> = MutableLiveData()
+    private val _netWorkAvailableMutableLiveData: MutableLiveData<Boolean> = MutableLiveData(false)
     val netWorkAvailableLiveData: LiveData<Boolean> get() = _netWorkAvailableMutableLiveData
 
-    private val _bitmapMutableLiveData: MutableLiveData<Bitmap> = MutableLiveData()
-    val bitmapLiveData: LiveData<Bitmap> get() = _bitmapMutableLiveData
+    val bitmapLiveData: LiveData<Bitmap> = liveData {
+        facility.getImage()
+            .catch { Timber.e(it) }
+            .collect { emit(it) }
+    }
 
     init {
         startNetworkCallback()
     }
 
     override fun onCleared() {
-        stopNetworkCallback()
+        networkConnectivityManager.stopNetworkCallback()
         super.onCleared()
     }
 
     private fun startNetworkCallback() {
-        Timber.d("Start network callback")
-        val networkRequestBuilder: NetworkRequest.Builder = NetworkRequest.Builder()
-        getConnectivityManager()?.registerNetworkCallback(
-            networkRequestBuilder.build(),
+        networkConnectivityManager.startNetworkCallback(
             object : ConnectivityManager.NetworkCallback() {
 
                 override fun onAvailable(network: Network) {
@@ -52,18 +56,13 @@ class MainViewModel @ViewModelInject constructor(
             })
     }
 
-    private fun stopNetworkCallback() {
-        Timber.d("stop network callback")
-        getConnectivityManager()?.unregisterNetworkCallback(ConnectivityManager.NetworkCallback())
-    }
-
-    private fun getConnectivityManager() =
-        applicationContext.getSystemService(Context.CONNECTIVITY_SERVICE) as? ConnectivityManager
-
-
     fun canFetchImage() = _netWorkAvailableMutableLiveData.value ?: false
 
     fun imageFetched(bitmap: Bitmap) {
-        _bitmapMutableLiveData.value = bitmap
+        viewModelScope.launch {
+            withContext(Dispatchers.IO) {
+                facility.putImage(bitmap)
+            }
+        }
     }
 }
