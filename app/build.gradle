@@ -68,7 +68,7 @@ android {
 ext {
     lifecycle_version = "2.2.0"
     arch_version = "2.1.0"
-    coroutinesVersion = "1.3.2"
+    coroutinesVersion = "1.4.1"
 }
 
 dependencies {
@@ -118,4 +118,10 @@ dependencies {
     //test
     testImplementation 'org.hamcrest:hamcrest-library:1.3'
     debugImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion"
+}
+
+configurations.all {
+    resolutionStrategy {
+        exclude group: "org.jetbrains.kotlinx", module: "kotlinx-coroutines-debug"
+    }
 }

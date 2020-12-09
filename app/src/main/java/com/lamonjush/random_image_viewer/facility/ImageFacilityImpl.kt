@@ -1,8 +1,6 @@
 package com.lamonjush.random_image_viewer.facility
 
 import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.util.Base64
 import com.lamonjush.random_image_viewer.repository.PreferenceRepository
 import com.lamonjush.random_image_viewer.utility.BitmapMapper
 import kotlinx.coroutines.Dispatchers
@@ -10,8 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
-import timber.log.Timber
-import java.io.ByteArrayOutputStream
 import javax.inject.Inject
 
 
